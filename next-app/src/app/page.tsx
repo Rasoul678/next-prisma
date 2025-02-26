@@ -5,7 +5,7 @@ export default async function Home() {
   const { isAuth } = await verifySession();
 
   if (!isAuth) {
-    redirect("/auth/login");
+    redirect("/auth");
   }
 
   return (

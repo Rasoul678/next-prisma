@@ -3,13 +3,13 @@
 import { Prisma, PrismaClient } from "@prisma/client";
 import bcrypt from "bcrypt";
 import { redirect } from "next/navigation";
-import { FormState } from "../definitions";
+import { UserDTO } from "../definitions";
 import { SigninFormSchema, SignupFormSchema } from "../schemas";
 import { createSession, deleteSession } from "../session";
 import { prismaErrorMessageResolver } from "../utils";
 const prisma = new PrismaClient();
 
-export async function signup(state: FormState, formData: FormData) {
+export async function signup(formData: FormData) {
   //! Validation Form Data
   const validatedFields = SignupFormSchema.safeParse({
     name: formData.get("name"),
@@ -38,15 +38,21 @@ export async function signup(state: FormState, formData: FormData) {
       },
     });
 
+    const sessionUser: UserDTO = {
+      id: String(user.id),
+      name: user.name,
+      email: user.email,
+    };
+
     //! Create Session
-    await createSession(String(user.id));
+    await createSession(sessionUser);
 
     //! Return Response
-    return {
-      message: "User created successfully",
-      user: { name: user.name, email: user.email },
-      code: "200",
-    };
+    // return {
+    //   message: "User created successfully",
+    //   user: { name: user.name, email: user.email },
+    //   code: "200",
+    // };
   } catch (error) {
     if (error instanceof Prisma.PrismaClientKnownRequestError) {
       const message = prismaErrorMessageResolver(error);
@@ -56,9 +62,11 @@ export async function signup(state: FormState, formData: FormData) {
   } finally {
     await prisma.$disconnect();
   }
+
+  redirect("/");
 }
 
-export async function signin(state: FormState, formData: FormData) {
+export async function signin(formData: FormData) {
   //! Validate Form Data
   const validatedFields = SigninFormSchema.safeParse({
     email: formData.get("email"),
@@ -96,15 +104,21 @@ export async function signin(state: FormState, formData: FormData) {
       };
     }
 
+    const sessionUser: UserDTO = {
+      id: String(user.id),
+      name: user.name,
+      email: user.email,
+    };
+
     //! Create a session for the authenticated user
-    await createSession(String(user.id));
+    await createSession(sessionUser);
 
     //! Return response
-    return {
-      message: "Sign-in successful",
-      user: { name: user.name, email: user.email },
-      code: "200",
-    };
+    // return {
+    //   message: "Sign-in successful",
+    //   user: { name: user.name, email: user.email },
+    //   code: "200",
+    // };
   } catch (error) {
     if (error instanceof Prisma.PrismaClientKnownRequestError) {
       const message = prismaErrorMessageResolver(error);
@@ -114,9 +128,11 @@ export async function signin(state: FormState, formData: FormData) {
   } finally {
     await prisma.$disconnect();
   }
+
+  redirect("/");
 }
 
 export async function logout() {
   await deleteSession();
-  redirect("/auth/login");
+  redirect("/auth");
 }

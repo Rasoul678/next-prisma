@@ -1,6 +1,7 @@
 import type { ExternalToast } from "sonner";
 
 export type UserDTO = {
+  id: string;
   name: string | null;
   email: string;
 };
@@ -30,7 +31,6 @@ export type FormState =
     }
   | undefined;
 
-export type SessionPayload = {
-  userId: string;
+export type SessionPayload = UserDTO & {
   expiresAt: Date;
 };

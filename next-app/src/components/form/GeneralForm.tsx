@@ -39,10 +39,13 @@ const GeneralForm = <T extends z.ZodSchema>(props: IProps<T>) => {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(handleSubmit)}
-        className="w-2/5 space-y-3"
+        className="w-full space-y-3"
       >
         <FormContext.Provider value={form}>{children}</FormContext.Provider>
-        <Button className="uppercase" disabled={isPending}>
+        <Button
+          className="uppercase w-full md:w-auto bg-cyan-400"
+          disabled={isPending}
+        >
           {submitText || "Submit"}
         </Button>
       </form>

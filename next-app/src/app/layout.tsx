@@ -1,6 +1,5 @@
-import Navbar from "@/components/Navbar";
+import MaybeNavbar from "@/components/navbar/MaybeNavbar";
 import { Toaster } from "@/components/ui/sonner";
-import { verifySession } from "@/lib/dal";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
@@ -25,14 +24,12 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const { isAuth } = await verifySession();
-
   return (
     <html lang="en" className="dark">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <Navbar isAuth={isAuth} />
+        <MaybeNavbar />
         {children}
         <Toaster />
       </body>
