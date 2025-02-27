@@ -3,6 +3,7 @@
 import { Prisma, PrismaClient } from "@prisma/client";
 import bcrypt from "bcrypt";
 import { redirect } from "next/navigation";
+import { Routes } from "../constants";
 import { UserDTO } from "../definitions";
 import { SigninFormSchema, SignupFormSchema } from "../schemas";
 import { createSession, deleteSession } from "../session";
@@ -63,7 +64,7 @@ export async function signup(formData: FormData) {
     await prisma.$disconnect();
   }
 
-  redirect("/");
+  redirect(Routes.HOME);
 }
 
 export async function signin(formData: FormData) {
@@ -129,10 +130,10 @@ export async function signin(formData: FormData) {
     await prisma.$disconnect();
   }
 
-  redirect("/");
+  redirect(Routes.HOME);
 }
 
 export async function logout() {
   await deleteSession();
-  redirect("/auth");
+  redirect(Routes.AUTH);
 }
